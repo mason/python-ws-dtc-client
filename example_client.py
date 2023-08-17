@@ -1,5 +1,6 @@
 import logging
 import traceback
+from dtc.message_types.submit_new_single_order import SubmitNewSingleOrder
 
 from dtc_client.dtc_client import DTCClient
 from dtc.message_types.market_data_request import MarketDataRequest
@@ -15,8 +16,8 @@ _ID = 'ID'
 if __name__ == '__main__':
     # Symbols to monitor
     SYMBOL_LIST = [
-        {_NAME: "ESM20_FUT_CME"},
-        {_NAME: "CLM20_FUT_NYMEX"}
+        {_NAME: "ESU3.CME"},
+        # {_NAME: "CLM20_FUT_NYMEX"}
     ]
     # Generate symbol IDs
     for ix, symbol in enumerate(SYMBOL_LIST):
@@ -34,6 +35,23 @@ if __name__ == '__main__':
                         symbol_id=SYMBOL_LIST[ix][_ID],
                         symbol=symbol[_NAME]))
 
+                
+            self.send(
+                    SubmitNewSingleOrder(
+                        # symbol=symbol[_NAME],
+                        symbol="ESU3.CME",
+                        exchange="CME",
+                        trade_account="Sim1",
+                        client_order_id = "15",
+                        order_type=1,
+                        buy_sell=1,
+                        quantity=1,
+                        time_in_force=1,
+                        is_automated_order=1,
+                        open_or_close=1,
+                        is_parent_order=0,
+                        )
+            )
         def on_message_thread(self, message):
             if isinstance(message, MarketDataSnapshot):
                 marketDataSnapshot = MarketDataSnapshot()
